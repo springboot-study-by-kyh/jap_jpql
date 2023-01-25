@@ -1,11 +1,9 @@
 package org.example;
 
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
 
 public class Main {
 
@@ -28,12 +26,10 @@ public class Main {
             entityManager.flush();
             entityManager.clear();
 
-            List<MemberDTO> result =  entityManager.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
-                .getResultList();
-
-            MemberDTO memberDTO = result.get(0);
-            System.out.println("memberDTO : " + memberDTO.getUsername());
-            System.out.println("memberDTO : " + memberDTO.getAge());
+            entityManager.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(0)
+                        .setMaxResults(10)
+                            .getResultList();
 
             entityTransaction.commit();
         } catch (Exception e) {
