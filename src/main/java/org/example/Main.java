@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -24,7 +25,9 @@ public class Main {
             member.setAge(10);
             entityManager.persist(member);
 
-            TypedQuery<Member> query = entityManager.createQuery("select m from Member m", Member.class);
+            entityManager.createQuery("select m from Member m where m.username = :username", Member.class)
+                .setParameter("username", "member1")
+                .getSingleResult();
 
             entityTransaction.commit();
         } catch (Exception e) {
