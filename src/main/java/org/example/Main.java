@@ -25,9 +25,15 @@ public class Main {
             member.setAge(10);
             entityManager.persist(member);
 
-            entityManager.createQuery("select m from Member m where m.username = :username", Member.class)
-                .setParameter("username", "member1")
-                .getSingleResult();
+            entityManager.flush();
+            entityManager.clear();
+
+            List<MemberDTO> result =  entityManager.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
+                .getResultList();
+
+            MemberDTO memberDTO = result.get(0);
+            System.out.println("memberDTO : " + memberDTO.getUsername());
+            System.out.println("memberDTO : " + memberDTO.getAge());
 
             entityTransaction.commit();
         } catch (Exception e) {
