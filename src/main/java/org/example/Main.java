@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -18,18 +19,23 @@ public class Main {
 
         try {
 
+            Team team = new Team();
+            team.setName("teamA");
+            entityManager.persist(team);
+
             Member  member = new Member();
             member.setUsername("member1");
             member.setAge(10);
+            member.setTeam(team);
+
             entityManager.persist(member);
 
             entityManager.flush();
             entityManager.clear();
 
-            entityManager.createQuery("select m from Member m order by m.age desc", Member.class)
-                    .setFirstResult(0)
-                        .setMaxResults(10)
-                            .getResultList();
+            String query = "select m from Member m inner join m.team t where t.name = :teamName";
+
+            List<Member> result = entityManager.createQuery(query, Member.class).getResultList();
 
             entityTransaction.commit();
         } catch (Exception e) {
