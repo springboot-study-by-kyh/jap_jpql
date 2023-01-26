@@ -34,7 +34,12 @@ public class Main {
             entityManager.flush();
             entityManager.clear();
 
-            String query = "select m.username, 'HELLO', true From Member m";
+            String query = "select "
+                            + "case when m.age <= 10 then '학생요금'"
+                            + "     when m.age >= 60 then '경로요금'"
+                            + "     else '일반요금'"
+                            + "end "
+                            + "from Member m";
 
 
             List<Member> result = entityManager.createQuery(query, Member.class).getResultList();
